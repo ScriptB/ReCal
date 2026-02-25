@@ -1,0 +1,81 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Prepare ZIP
+      shell: pwsh
+      run: |
+        $out = "src/bin/Release/net48"
+        if (-not (Test-Path $out)) { throw "Build output not found: $out" }
+        New-Item -ItemType Directory -Force -Path artifacts | Out-Null
+        Get-ChildItem -Path $out -File | Where-Object { $_.Extension -ne '.pdb' } | ForEach-Object {
+          Copy-Item $_.FullName -Destination artifacts -Force
+        }
+        Compress-Archive -Path artifacts/* -DestinationPath artifacts/ReCal.zip -Force
+
+    - name: Get version
+      id: get_version
+      shell: pwsh
+      run: |
+        if ($env:GITHUB_REF -like 'refs/tags/*') {
+          $version = $env:GITHUB_REF -replace 'refs/tags/v', ''
+        } else {
+          $version = "latest"
+        }
+        "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ReCal v${{ steps.get_version.outputs.version }}
+        body: |
+          ## Download
+          Download the ZIP below, extract it, and run `ReCal.exe`.
+
+          ## Changes in this release
+          - Update checker points to ScriptB/ReCal
+          - WPF UI with frosted glass styling
+          - Wall Locker material and cost calculations
+          - Terms of Service and update progress dialog
+
+          ## Update System
+          The application checks GitHub Releases on startup.
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: artifacts/ReCal.zip
+        asset_name: ReCal-${{ steps.get_version.outputs.version }}.zip
+        asset_content_type: application/zip
