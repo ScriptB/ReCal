@@ -26,3 +26,4 @@ See `docs/RELEASE.md` for the public release workflow.
 ## License
 
 Proprietary. See `LICENSE`.
+![SS1](https://github.com/user-attachments/assets/9e0a37d3-322a-45e8-a009-2165d7ad6eaf)
