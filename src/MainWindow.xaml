@@ -1,0 +1,1992 @@
+<Window x:Class="ReCal.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ReCal" 
+        MinHeight="600" MinWidth="800"
+        Height="700" Width="1000"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource PrimaryBackground}"
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="CanResize"
+        AllowsTransparency="False"
+        Icon="pack://application:,,,/ReCal;component/recal.ico"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
+        RenderOptions.ClearTypeHint="Enabled"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True">
+
+    <Window.Resources>
+        <DataTemplate x:Key="NavDashboardTemplate">
+            <Grid Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <WrapPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" ItemHeight="Auto">
+                    <Button Content="Dashboard" Style="{StaticResource NavButton}"
+                            IsEnabled="False"/>
+                    <Button Content="Wall Lockers" Style="{StaticResource NavButton}"
+                            Click="OpenWallLockers_Click"/>
+                    <Button Content="Cigars" Style="{StaticResource NavButton}"
+                            Click="OpenCigars_Click"/>
+                </WrapPanel>
+                <WrapPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" ItemHeight="Auto">
+                    <Button Content="Info" Style="{StaticResource NavButton}"
+                            Click="OpenInfo_Click"/>
+                </WrapPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="NavInfoTemplate">
+            <Grid Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <WrapPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" ItemHeight="Auto">
+                    <Button Content="Dashboard" Style="{StaticResource NavButton}"
+                            Click="OpenDashboard_Click"/>
+                    <Button Content="Wall Lockers" Style="{StaticResource NavButton}"
+                            Click="OpenWallLockers_Click"/>
+                    <Button Content="Cigars" Style="{StaticResource NavButton}"
+                            Click="OpenCigars_Click"/>
+                </WrapPanel>
+                <WrapPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" ItemHeight="Auto">
+                    <Button Content="Info" Style="{StaticResource NavButton}"
+                            IsEnabled="False"/>
+                </WrapPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="NavWallTemplate">
+            <Grid Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <WrapPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" ItemHeight="Auto">
+                    <Button Content="Dashboard" Style="{StaticResource NavButton}"
+                            Click="OpenDashboard_Click"/>
+                    <Button Content="Wall Lockers" Style="{StaticResource NavButton}"
+                            IsEnabled="False"/>
+                    <Button Content="Cigars" Style="{StaticResource NavButton}"
+                            Click="OpenCigars_Click"/>
+                </WrapPanel>
+                <WrapPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" ItemHeight="Auto">
+                    <Button Content="Info" Style="{StaticResource NavButton}"
+                            Click="OpenInfo_Click"/>
+                </WrapPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="NavCigarsTemplate">
+            <Grid Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <WrapPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" ItemHeight="Auto">
+                    <Button Content="Dashboard" Style="{StaticResource NavButton}"
+                            Click="OpenDashboard_Click"/>
+                    <Button Content="Wall Lockers" Style="{StaticResource NavButton}"
+                            Click="OpenWallLockers_Click"/>
+                    <Button Content="Cigars" Style="{StaticResource NavButton}"
+                            IsEnabled="False"/>
+                </WrapPanel>
+                <WrapPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" ItemHeight="Auto">
+                    <Button Content="Info" Style="{StaticResource NavButton}"
+                            Click="OpenInfo_Click"/>
+                </WrapPanel>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+    
+    <Window.Effect>
+        <DropShadowEffect BlurRadius="25" ShadowDepth="10" Opacity="0.5" Color="#000000"/>
+    </Window.Effect>
+    
+    <Grid UseLayoutRounding="True" SnapsToDevicePixels="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Animated Background with Floating Light Orbs -->
+        <Grid Grid.RowSpan="2" UseLayoutRounding="True" SnapsToDevicePixels="True">
+            <!-- Dark Gradient Background -->
+            <Grid.Background>
+                <RadialGradientBrush Center="0.5,0.5" RadiusX="1.5" RadiusY="1.5">
+                    <GradientStop Color="#FF0A0A0A" Offset="0"/>
+                    <GradientStop Color="#FF050505" Offset="0.5"/>
+                    <GradientStop Color="#FF000000" Offset="1"/>
+                </RadialGradientBrush>
+            </Grid.Background>
+            
+            <!-- Floating Light Orbs -->
+            <Canvas Opacity="0.3">
+                <!-- Blue Orb 1 -->
+                <Ellipse x:Name="BlueOrb1" Width="80" Height="80" Canvas.Left="50" Canvas.Top="100">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#FF00D9FF" Offset="0"/>
+                            <GradientStop Color="#FF00D9FF" Offset="0.3"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="BlueOrb1Scale" CenterX="40" CenterY="40"/>
+                            <TranslateTransform x:Name="BlueOrb1Transform"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                    <Ellipse.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <!-- Size animation with respawn cycle -->
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    From="0.8" To="0.1" Duration="0:0:8"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    From="0.8" To="0.1" Duration="0:0:8"
+                                                    AutoReverse="False"/>
+                                    <!-- Fly off screen when small -->
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:8"
+                                                    From="0" To="-1000" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:8"
+                                                    From="0" To="-500" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <!-- Respawn after random delay -->
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:15"
+                                                    From="1000" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:15"
+                                                    From="500" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <!-- Resize back to normal -->
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:15"
+                                                    From="0.1" To="1.8" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:15"
+                                                    From="0.1" To="1.8" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <!-- Continue normal cycle -->
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:16"
+                                                    From="1.8" To="0.8" Duration="0:0:7"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:16"
+                                                    From="1.8" To="0.8" Duration="0:0:7"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:16"
+                                                    From="0" To="800" Duration="0:0:20"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:16"
+                                                    From="0" To="300" Duration="0:0:15"
+                                                    AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+                
+                <!-- Red Orb 1 -->
+                <Ellipse x:Name="RedOrb1" Width="90" Height="90" Canvas.Left="200" Canvas.Top="200">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#FFFF6B35" Offset="0"/>
+                            <GradientStop Color="#FFFF6B35" Offset="0.3"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="RedOrb1Scale" CenterX="45" CenterY="45"/>
+                            <TranslateTransform x:Name="RedOrb1Transform"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                    <Ellipse.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    From="0.7" To="0.1" Duration="0:0:10"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    From="0.7" To="0.1" Duration="0:0:10"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:10"
+                                                    From="0" To="1000" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:10"
+                                                    From="0" To="600" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:18"
+                                                    From="-1000" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:18"
+                                                    From="-600" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:18"
+                                                    From="0.1" To="1.6" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:18"
+                                                    From="0.1" To="1.6" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:19"
+                                                    From="1.6" To="0.7" Duration="0:0:9"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:19"
+                                                    From="1.6" To="0.7" Duration="0:0:9"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:19"
+                                                    From="0" To="-150" Duration="0:0:18"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:19"
+                                                    From="0" To="200" Duration="0:0:12"
+                                                    AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+                
+                <!-- White Orb 1 -->
+                <Ellipse x:Name="WhiteOrb1" Width="70" Height="70" Canvas.Left="400" Canvas.Top="50">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                            <GradientStop Color="#FFFFFFFF" Offset="0.4"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="WhiteOrb1Scale" CenterX="35" CenterY="35"/>
+                            <TranslateTransform x:Name="WhiteOrb1Transform"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                    <Ellipse.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    From="0.9" To="0.1" Duration="0:0:12"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    From="0.9" To="0.1" Duration="0:0:12"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:12"
+                                                    From="0" To="-800" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:12"
+                                                    From="0" To="800" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:20"
+                                                    From="800" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:20"
+                                                    From="-800" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:20"
+                                                    From="0.1" To="2.0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:20"
+                                                    From="0.1" To="2.0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:21"
+                                                    From="2.0" To="0.9" Duration="0:0:11"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:21"
+                                                    From="2.0" To="0.9" Duration="0:0:11"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:21"
+                                                    From="0" To="-200" Duration="0:0:25"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:21"
+                                                    From="0" To="400" Duration="0:0:20"
+                                                    AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+                
+                <!-- Blue Orb 2 -->
+                <Ellipse x:Name="BlueOrb2" Width="100" Height="100" Canvas.Left="600" Canvas.Top="300">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#FF00D9FF" Offset="0"/>
+                            <GradientStop Color="#FF00D9FF" Offset="0.3"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="BlueOrb2Scale" CenterX="50" CenterY="50"/>
+                            <TranslateTransform x:Name="BlueOrb2Transform"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                    <Ellipse.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    From="0.6" To="0.1" Duration="0:0:9"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    From="0.6" To="0.1" Duration="0:0:9"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb2Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:9"
+                                                    From="0" To="1200" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb2Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:9"
+                                                    From="0" To="-700" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb2Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:16"
+                                                    From="-1200" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb2Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:16"
+                                                    From="700" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:16"
+                                                    From="0.1" To="1.7" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:16"
+                                                    From="0.1" To="1.7" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:17"
+                                                    From="1.7" To="0.6" Duration="0:0:8"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:17"
+                                                    From="1.7" To="0.6" Duration="0:0:8"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb2Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:17"
+                                                    From="0" To="-300" Duration="0:0:22"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="BlueOrb2Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:17"
+                                                    From="0" To="-150" Duration="0:0:17"
+                                                    AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+                
+                <!-- Red Orb 2 -->
+                <Ellipse x:Name="RedOrb2" Width="75" Height="75" Canvas.Left="100" Canvas.Top="400">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#FFFF6B35" Offset="0"/>
+                            <GradientStop Color="#FFFF6B35" Offset="0.3"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="RedOrb2Scale" CenterX="37.5" CenterY="37.5"/>
+                            <TranslateTransform x:Name="RedOrb2Transform"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                    <Ellipse.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    From="0.8" To="0.1" Duration="0:0:11"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    From="0.8" To="0.1" Duration="0:0:11"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb2Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:11"
+                                                    From="0" To="-900" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb2Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:11"
+                                                    From="0" To="-500" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb2Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:17"
+                                                    From="900" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb2Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:17"
+                                                    From="500" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:17"
+                                                    From="0.1" To="1.9" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:17"
+                                                    From="0.1" To="1.9" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:18"
+                                                    From="1.9" To="0.8" Duration="0:0:10"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:18"
+                                                    From="1.9" To="0.8" Duration="0:0:10"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb2Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:18"
+                                                    From="0" To="500" Duration="0:0:19"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="RedOrb2Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:18"
+                                                    From="0" To="-100" Duration="0:0:14"
+                                                    AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+                
+                <!-- White Orb 2 -->
+                <Ellipse x:Name="WhiteOrb2" Width="85" Height="85" Canvas.Left="700" Canvas.Top="150">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                            <GradientStop Color="#FFFFFFFF" Offset="0.4"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="WhiteOrb2Scale" CenterX="42.5" CenterY="42.5"/>
+                            <TranslateTransform x:Name="WhiteOrb2Transform"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                    <Ellipse.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    From="0.7" To="0.1" Duration="0:0:13"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    From="0.7" To="0.1" Duration="0:0:13"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb2Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:13"
+                                                    From="0" To="1100" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb2Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:13"
+                                                    From="0" To="900" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb2Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:22"
+                                                    From="-1100" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb2Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:22"
+                                                    From="-900" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:22"
+                                                    From="0.1" To="1.8" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:22"
+                                                    From="0.1" To="1.8" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:23"
+                                                    From="1.8" To="0.7" Duration="0:0:12"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb2Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:23"
+                                                    From="1.8" To="0.7" Duration="0:0:12"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb2Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:23"
+                                                    From="0" To="-400" Duration="0:0:24"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="WhiteOrb2Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:23"
+                                                    From="0" To="250" Duration="0:0:16"
+                                                    AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+                
+                <!-- Green Orb 1 -->
+                <Ellipse x:Name="GreenOrb1" Width="65" Height="65" Canvas.Left="300" Canvas.Top="350">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#FF00FF88" Offset="0"/>
+                            <GradientStop Color="#FF00FF88" Offset="0.3"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="GreenOrb1Scale" CenterX="32.5" CenterY="32.5"/>
+                            <TranslateTransform x:Name="GreenOrb1Transform"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                    <Ellipse.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation Storyboard.TargetName="GreenOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    From="0.8" To="0.1" Duration="0:0:7"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="GreenOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    From="0.8" To="0.1" Duration="0:0:7"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="GreenOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:7"
+                                                    From="0" To="800" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="GreenOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:7"
+                                                    From="0" To="600" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="GreenOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:14"
+                                                    From="-800" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="GreenOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:14"
+                                                    From="-600" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="GreenOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:14"
+                                                    From="0.1" To="1.7" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="GreenOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:14"
+                                                    From="0.1" To="1.7" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="GreenOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:15"
+                                                    From="1.7" To="0.8" Duration="0:0:6"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="GreenOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:15"
+                                                    From="1.7" To="0.8" Duration="0:0:6"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="GreenOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:15"
+                                                    From="0" To="300" Duration="0:0:16"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="GreenOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:15"
+                                                    From="0" To="-200" Duration="0:0:13"
+                                                    AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+                
+                <!-- Purple Orb 1 -->
+                <Ellipse x:Name="PurpleOrb1" Width="95" Height="95" Canvas.Left="150" Canvas.Top="50">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#FF9B59B6" Offset="0"/>
+                            <GradientStop Color="#FF9B59B6" Offset="0.3"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="PurpleOrb1Scale" CenterX="47.5" CenterY="47.5"/>
+                            <TranslateTransform x:Name="PurpleOrb1Transform"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                    <Ellipse.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation Storyboard.TargetName="PurpleOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    From="0.6" To="0.1" Duration="0:0:11"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="PurpleOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    From="0.6" To="0.1" Duration="0:0:11"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="PurpleOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:11"
+                                                    From="0" To="-1000" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="PurpleOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:11"
+                                                    From="0" To="800" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="PurpleOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:19"
+                                                    From="1000" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="PurpleOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:19"
+                                                    From="-800" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="PurpleOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:19"
+                                                    From="0.1" To="1.5" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="PurpleOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:19"
+                                                    From="0.1" To="1.5" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="PurpleOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:20"
+                                                    From="1.5" To="0.6" Duration="0:0:10"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="PurpleOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:20"
+                                                    From="1.5" To="0.6" Duration="0:0:10"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="PurpleOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:20"
+                                                    From="0" To="400" Duration="0:0:21"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="PurpleOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:20"
+                                                    From="0" To="350" Duration="0:0:18"
+                                                    AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+                
+                <!-- Yellow Orb 1 -->
+                <Ellipse x:Name="YellowOrb1" Width="72" Height="72" Canvas.Left="500" Canvas.Top="200">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#FFF1C40F" Offset="0"/>
+                            <GradientStop Color="#FFF1C40F" Offset="0.3"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="YellowOrb1Scale" CenterX="36" CenterY="36"/>
+                            <TranslateTransform x:Name="YellowOrb1Transform"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                    <Ellipse.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation Storyboard.TargetName="YellowOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    From="0.7" To="0.1" Duration="0:0:9"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="YellowOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    From="0.7" To="0.1" Duration="0:0:9"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="YellowOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:9"
+                                                    From="0" To="-700" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="YellowOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:9"
+                                                    From="0" To="-500" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="YellowOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:16"
+                                                    From="700" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="YellowOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:16"
+                                                    From="500" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="YellowOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:16"
+                                                    From="0.1" To="1.6" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="YellowOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:16"
+                                                    From="0.1" To="1.6" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="YellowOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:17"
+                                                    From="1.6" To="0.7" Duration="0:0:8"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="YellowOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:17"
+                                                    From="1.6" To="0.7" Duration="0:0:8"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="YellowOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:17"
+                                                    From="0" To="-250" Duration="0:0:17"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="YellowOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:17"
+                                                    From="0" To="150" Duration="0:0:14"
+                                                    AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+                
+                <!-- Pink Orb 1 -->
+                <Ellipse x:Name="PinkOrb1" Width="88" Height="88" Canvas.Left="750" Canvas.Top="380">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#FFE91E63" Offset="0"/>
+                            <GradientStop Color="#FFE91E63" Offset="0.3"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="PinkOrb1Scale" CenterX="44" CenterY="44"/>
+                            <TranslateTransform x:Name="PinkOrb1Transform"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                    <Ellipse.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation Storyboard.TargetName="PinkOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    From="0.5" To="0.1" Duration="0:0:10"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="PinkOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    From="0.5" To="0.1" Duration="0:0:10"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="PinkOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:10"
+                                                    From="0" To="900" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="PinkOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:10"
+                                                    From="0" To="-600" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="PinkOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:18"
+                                                    From="-900" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="PinkOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:18"
+                                                    From="600" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="PinkOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:18"
+                                                    From="0.1" To="1.4" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="PinkOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:18"
+                                                    From="0.1" To="1.4" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="PinkOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:19"
+                                                    From="1.4" To="0.5" Duration="0:0:9"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="PinkOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:19"
+                                                    From="1.4" To="0.5" Duration="0:0:9"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="PinkOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:19"
+                                                    From="0" To="-500" Duration="0:0:23"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="PinkOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:19"
+                                                    From="0" To="-180" Duration="0:0:15"
+                                                    AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+                
+                <!-- Cyan Orb 1 -->
+                <Ellipse x:Name="CyanOrb1" Width="60" Height="60" Canvas.Left="450" Canvas.Top="450">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#FF00BCD4" Offset="0"/>
+                            <GradientStop Color="#FF00BCD4" Offset="0.3"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="CyanOrb1Scale" CenterX="30" CenterY="30"/>
+                            <TranslateTransform x:Name="CyanOrb1Transform"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                    <Ellipse.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation Storyboard.TargetName="CyanOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    From="0.9" To="0.1" Duration="0:0:6"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="CyanOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    From="0.9" To="0.1" Duration="0:0:6"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="CyanOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:6"
+                                                    From="0" To="-600" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="CyanOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:6"
+                                                    From="0" To="700" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="CyanOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:12"
+                                                    From="600" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="CyanOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:12"
+                                                    From="-700" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="CyanOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:12"
+                                                    From="0.1" To="1.9" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="CyanOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:12"
+                                                    From="0.1" To="1.9" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="CyanOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:13"
+                                                    From="1.9" To="0.9" Duration="0:0:5"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="CyanOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:13"
+                                                    From="1.9" To="0.9" Duration="0:0:5"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="CyanOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:13"
+                                                    From="0" To="-200" Duration="0:0:19"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="CyanOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:13"
+                                                    From="0" To="-300" Duration="0:0:12"
+                                                    AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+                
+                <!-- Orange Orb 1 -->
+                <Ellipse x:Name="OrangeOrb1" Width="78" Height="78" Canvas.Left="250" Canvas.Top="150">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#FFFF9800" Offset="0"/>
+                            <GradientStop Color="#FF9800" Offset="0.3"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="OrangeOrb1Scale" CenterX="39" CenterY="39"/>
+                            <TranslateTransform x:Name="OrangeOrb1Transform"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                    <Ellipse.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation Storyboard.TargetName="OrangeOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    From="0.6" To="0.1" Duration="0:0:8"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="OrangeOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    From="0.6" To="0.1" Duration="0:0:8"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="OrangeOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:8"
+                                                    From="0" To="800" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="OrangeOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:8"
+                                                    From="0" To="-400" Duration="0:0:2"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="OrangeOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:15"
+                                                    From="-800" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="OrangeOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:15"
+                                                    From="400" To="0" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="OrangeOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:15"
+                                                    From="0.1" To="1.5" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="OrangeOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:15"
+                                                    From="0.1" To="1.5" Duration="0:0:1"
+                                                    AutoReverse="False"/>
+                                    <DoubleAnimation Storyboard.TargetName="OrangeOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleX"
+                                                    BeginTime="0:0:16"
+                                                    From="1.5" To="0.6" Duration="0:0:7"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="OrangeOrb1Scale"
+                                                    Storyboard.TargetProperty="ScaleY"
+                                                    BeginTime="0:0:16"
+                                                    From="1.5" To="0.6" Duration="0:0:7"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="OrangeOrb1Transform"
+                                                    Storyboard.TargetProperty="X"
+                                                    BeginTime="0:0:16"
+                                                    From="0" To="350" Duration="0:0:20"
+                                                    AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="OrangeOrb1Transform"
+                                                    Storyboard.TargetProperty="Y"
+                                                    BeginTime="0:0:16"
+                                                    From="0" To="200" Duration="0:0:16"
+                                                    AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+            </Canvas>
+        </Grid>
+
+        <!-- Main Content - Tabbed Interface -->
+        <Grid Grid.Row="1" Margin="15" UseLayoutRounding="True" SnapsToDevicePixels="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header Section -->
+            <Border Grid.Row="0" Style="{StaticResource ModernCard}" Margin="0,0,0,20">
+                
+                    <StackPanel HorizontalAlignment="Center">
+                        <!-- Icon with Glow Effect -->
+                        <Border Width="50" Height="50" CornerRadius="25" Margin="0,0,0,12"
+                               UseLayoutRounding="True" SnapsToDevicePixels="True">
+                            <Border.Background>
+                                <RadialGradientBrush>
+                                    <GradientStop Color="#FF00D9FF" Offset="0"/>
+                                    <GradientStop Color="#FF00B8E6" Offset="1"/>
+                                </RadialGradientBrush>
+                            </Border.Background>
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.8" Color="#FF00D9FF"/>
+                            </Border.Effect>
+                            <Path Data="{StaticResource LockIcon}" 
+                                  Style="{StaticResource VectorIcon}" 
+                                  Width="25" Height="25"
+                                  HorizontalAlignment="Center" 
+                                  VerticalAlignment="Center"/>
+                        </Border>
+                        
+                        <TextBlock Text="ReCal" Style="{StaticResource TitleTextStyle}"
+                                  HorizontalAlignment="Center"
+                                  Margin="0,0,0,5"
+                                  TextOptions.TextFormattingMode="Display"
+                                  TextOptions.TextRenderingMode="ClearType"/>
+                        <TextBlock Text="Calculate material costs and requirements for Wall Lockers and Cigar production"
+                                  Style="{StaticResource SubtitleTextStyle}"
+                                  HorizontalAlignment="Center"
+                                  TextOptions.TextFormattingMode="Display"
+                                  TextOptions.TextRenderingMode="ClearType"/>
+                    </StackPanel>
+                
+            </Border>
+
+            <!-- Tab Control -->
+            <TabControl Grid.Row="1" x:Name="MainTabControl" 
+                        Style="{StaticResource CustomTabControlNoHeader}" SelectedIndex="0"
+                        UseLayoutRounding="True" SnapsToDevicePixels="True">
+                
+                <!-- Dashboard Tab -->
+                <TabItem Header="Dashboard" Style="{StaticResource CustomTabItem}">
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
+                                  UseLayoutRounding="True" SnapsToDevicePixels="True">
+                        <Border Margin="10" Padding="12"
+                                Background="{StaticResource DashboardGlassBg}" BorderBrush="{StaticResource DashboardGlassBorder}" BorderThickness="1"
+                                CornerRadius="12" SnapsToDevicePixels="True">
+                            <Grid UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Dashboard Tabs -->
+                                <ContentControl Grid.Row="0" ContentTemplate="{StaticResource NavDashboardTemplate}"/>
+
+                                <!-- Dashboard Header -->
+                                <Border Grid.Row="1" Style="{StaticResource ModernCard}" Margin="0,0,0,12">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Width="48" Height="48" CornerRadius="24" Margin="0,0,15,0"
+                                                UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                            <Border.Background>
+                                                <RadialGradientBrush>
+                                                    <GradientStop Color="#FF00D9FF" Offset="0"/>
+                                                    <GradientStop Color="#FF00B8E6" Offset="1"/>
+                                                </RadialGradientBrush>
+                                            </Border.Background>
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="18" ShadowDepth="0" Opacity="0.7" Color="#FF00D9FF"/>
+                                            </Border.Effect>
+                                            <Path Data="{StaticResource LockIcon}"
+                                                  Style="{StaticResource VectorIcon}"
+                                                  Width="24" Height="24"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="Dashboard" Style="{StaticResource TitleTextStyle}"/>
+                                            <TextBlock Text="Choose a calculator to begin"
+                                                       Style="{StaticResource SubtitleTextStyle}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Dashboard Buttons -->
+                                <WrapPanel Grid.Row="2" Orientation="Horizontal" ItemHeight="Auto" Margin="0,0,0,0">
+                                    <Border Style="{StaticResource CardTile}">
+                                        <StackPanel>
+                                            <TextBlock Text="Wall Locker Calculator" Style="{StaticResource SectionTitleTextStyle}" Margin="0,0,0,8"/>
+                                            <TextBlock Text="Materials, costs, and salvage outputs" FontSize="11"
+                                                       Foreground="{StaticResource TextSecondary}" Margin="0,0,0,12"/>
+                                            <TextBlock Text="Use the tabs above to open" FontSize="11" Foreground="{StaticResource TextSecondary}"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border Style="{StaticResource CardTile}">
+                                        <StackPanel>
+                                            <TextBlock Text="Cigar Calculator" Style="{StaticResource SectionTitleTextStyle}" Margin="0,0,0,8"/>
+                                            <TextBlock Text="Revenue, time, and materials" FontSize="11"
+                                                       Foreground="{StaticResource TextSecondary}" Margin="0,0,0,12"/>
+                                            <TextBlock Text="Use the tabs above to open" FontSize="11" Foreground="{StaticResource TextSecondary}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </WrapPanel>
+
+                                <!-- Tips -->
+                                <Border Grid.Row="3" Background="{StaticResource PanelSurface}" CornerRadius="8" Padding="12" Margin="0,5,0,0">
+                                    <TextBlock x:Name="DashboardTipText" Text="Tip: Resize the window freely. Panels wrap to avoid cutoffs."
+                                               Style="{StaticResource CaptionTextStyle}" TextWrapping="Wrap"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </ScrollViewer>
+                </TabItem>
+
+                                <!-- Info Tab -->
+                <TabItem Header="Info" Style="{StaticResource CustomTabItem}">
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
+                                  UseLayoutRounding="True" SnapsToDevicePixels="True">
+                        <Grid UseLayoutRounding="True" SnapsToDevicePixels="True" Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <ContentControl Grid.Row="0" ContentTemplate="{StaticResource NavInfoTemplate}"/>
+
+                            <Border Grid.Row="1" Style="{StaticResource ModernCard}" Margin="0,0,0,12">
+                                <StackPanel>
+                                    <TextBlock Text="Nylex RP ? Wall Locker Method" Style="{StaticResource SectionTitleTextStyle}" Margin="0,0,0,6"/>
+                                    <TextBlock Text="Await a future version for Tobacco. This tab documents the current wall locker route."
+                                               Style="{StaticResource SubtitleTextStyle}"/>
+                                </StackPanel>
+                            </Border>
+
+                            <WrapPanel Grid.Row="2" Orientation="Horizontal" ItemHeight="Auto" Margin="0,0,0,0">
+                                <Border Style="{StaticResource CardTile}">
+                                    <StackPanel>
+                                        <TextBlock Text="Wall Locker Method (Nylex RP)" FontSize="15" FontWeight="SemiBold"
+                                                   Foreground="{StaticResource TextPrimary}" Margin="0,0,0,8"/>
+                                        <TextBlock Text="38 Scrap + 8 Tape = 1 Wall Locker" FontSize="12" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,8"/>
+                                        <TextBlock Text="We don?t mine scrap. We buy it smart." FontSize="12" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,12"/>
+
+                                        <TextBlock Text="Scrap math" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,6"/>
+                                        <TextBlock Text="1 can = 4 scrap" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="38 ? 4 = 9.5 ? buy 10 cans = 40 scrap" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="Use 38, 2 scrap spare" FontSize="12" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,10"/>
+
+                                        <TextBlock Text="Tape method" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,6"/>
+                                        <TextBlock Text="Cage lights from hardware store" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="Salvage cage light = tape (exact tape per light depends server side)" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="8 tape needed" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="Cage lights needed = 8 ? (tape per light), round up" FontSize="12" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,10"/>
+
+                                        <TextBlock Text="Route" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,6"/>
+                                        <TextBlock Text="Buy cans ? buy cage lights" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="Salvage cans = scrap" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="Salvage cage lights = tape" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="Make sure you have 38 scrap + 8 tape" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="Craft wall locker ? done" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource CardTile}">
+                                    <StackPanel>
+                                        <TextBlock Text="Scaling" FontSize="15" FontWeight="SemiBold"
+                                                   Foreground="{StaticResource TextPrimary}" Margin="0,0,0,8"/>
+                                        <TextBlock Text="10 lockers" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}"/>
+                                        <TextBlock Text="380 scrap = 95 cans" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="80 tape = 80 ? T cage lights" FontSize="12" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,10"/>
+
+                                        <TextBlock Text="100 lockers" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}"/>
+                                        <TextBlock Text="3800 scrap = 950 cans" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="800 tape = 800 ? T cage lights" FontSize="12" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,12"/>
+
+                                        <TextBlock Text="Why this route" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,6"/>
+                                        <TextBlock Text="Cans = 1 ? 4 scrap (best scrap multiplier)" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="Cage lights = direct tape" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="No mining" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="No cloth ? tape crafting" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="No multi-step chain" FontSize="12" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,10"/>
+
+                                        <TextBlock Text="Buy ? Salvage ? Craft" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="Fast" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="Repeatable" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="No RNG" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                        <TextBlock Text="Max throughput" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                                    </StackPanel>
+                                </Border>
+                            </WrapPanel>
+                        </Grid>
+                    </ScrollViewer>
+                </TabItem>
+
+<!-- Wall Locker Tab -->
+                <TabItem Header="🔒 Wall Lockers" 
+                         Style="{StaticResource CustomTabItem}"
+                         UseLayoutRounding="True" SnapsToDevicePixels="True">
+                    <TabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🔒" FontSize="14" Margin="0,0,6,0"/>
+                                <TextBlock Text="Wall Lockers" FontSize="12"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </TabItem.HeaderTemplate>
+                    
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
+                              UseLayoutRounding="True" SnapsToDevicePixels="True">
+                        <Grid UseLayoutRounding="True" SnapsToDevicePixels="True" Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                        
+                        <ContentControl Grid.Row="0" ContentTemplate="{StaticResource NavWallTemplate}"/>
+
+                        <!-- Locker Input Section -->
+                        <Border Grid.Row="1" Style="{StaticResource ModernCard}" Margin="0,0,0,20">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,15,0">
+                                    <Border Width="40" Height="40" CornerRadius="20" Margin="0,0,0,8"
+                                           UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#FF00D9FF" Offset="0"/>
+                                                <GradientStop Color="#FF00B8E6" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Path Data="{StaticResource BoxIcon}" 
+                                              Style="{StaticResource VectorIcon}" 
+                                              Width="20" Height="20"
+                                              HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="Number of Lockers:" Style="{StaticResource LabelTextStyle}" FontSize="12"/>
+                                </StackPanel>
+                                
+                                <Grid Grid.Column="1" Margin="0,0,15,0"
+                                     UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                    <TextBox x:Name="LockerCountTextBox" 
+                                             Text="1" 
+                                             FontSize="14" 
+                                             Height="35"
+                                             Background="{StaticResource PanelSurface}"
+                                             Foreground="White"
+                                             BorderBrush="{StaticResource PanelSurfaceAlt}"
+                                             BorderThickness="2"
+                                             Padding="15,8"
+                                             FontFamily="Segoe UI"
+                                             TextOptions.TextFormattingMode="Display"
+                                             TextOptions.TextRenderingMode="ClearType"
+                                             UseLayoutRounding="True"
+                                             SnapsToDevicePixels="True"
+                                             VerticalAlignment="Center"/>
+                                </Grid>
+                                
+                                <Button Grid.Column="2" x:Name="CalculateButton" Content="Calculate" 
+                                       Style="{StaticResource GlassButton}" Click="CalculateButton_Click" Height="35" Padding="12,0">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Path Data="{StaticResource CalculatorIcon}" 
+                                                      Style="{StaticResource VectorIcon}" 
+                                                      Width="14" Height="14"
+                                                      Margin="0,0,6,0"
+                                                      VerticalAlignment="Center"/>
+                                                <TextBlock Text="Calculate" VerticalAlignment="Center"
+                                                          TextOptions.TextFormattingMode="Display"
+                                                          TextOptions.TextRenderingMode="ClearType"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
+                            </Grid>
+                        </Border>
+
+                        <!-- Responsive Layout Container -->
+                        <WrapPanel Grid.Row="2" Orientation="Horizontal" ItemHeight="Auto" Margin="0,0,0,0" VerticalAlignment="Top">
+                            
+                            <!-- Materials Card -->
+                            <Border Style="{StaticResource CardTile}">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                        <Border Width="35" Height="35" CornerRadius="18" Margin="0,0,10,0"
+                                               UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                    <GradientStop Color="#FF00FF88" Offset="0"/>
+                                                    <GradientStop Color="#FF00CC6A" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.6" Color="#FF00FF88"/>
+                                            </Border.Effect>
+                                            <Path Data="{StaticResource WrenchIcon}" 
+                                                  Style="{StaticResource VectorIcon}" 
+                                                  Width="18" Height="18"
+                                                  HorizontalAlignment="Center" 
+                                                  VerticalAlignment="Center"/>
+                                        </Border>
+                                        <TextBlock Text="Materials Needed" 
+                                                  FontSize="16" 
+                                                  FontWeight="Light" 
+                                                  Foreground="{StaticResource TextPrimary}"
+                                                  VerticalAlignment="Center"
+                                                  TextOptions.TextFormattingMode="Display"
+                                                  TextOptions.TextRenderingMode="ClearType"/>
+                                    </StackPanel>
+                                    
+                                    <StackPanel>
+                                        <!-- Metal Cans -->
+                                        <Border Background="{StaticResource PanelSurface}" CornerRadius="10" Padding="12" Margin="0,0,0,8"
+                                              UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.3" Color="#000000"/>
+                                            </Border.Effect>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Path Grid.Column="0" Data="{StaticResource BoxIcon}" 
+                                                      Style="{StaticResource VectorIcon}" 
+                                                      Width="16" Height="16"
+                                                      Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="Metal Cans" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
+                                                <TextBlock Grid.Column="2" x:Name="CansNeededText" Text="0" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
+                                            </Grid>
+                                        </Border>
+                                        
+                                        <!-- Cage Lights -->
+                                        <Border Background="{StaticResource PanelSurface}" CornerRadius="10" Padding="12" Margin="0,0,0,8"
+                                              UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.3" Color="#000000"/>
+                                            </Border.Effect>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Path Grid.Column="0" Data="{StaticResource LightBulbIcon}" 
+                                                      Style="{StaticResource VectorIcon}" 
+                                                      Width="16" Height="16"
+                                                      Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="Cage Lights" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
+                                                <TextBlock Grid.Column="2" x:Name="CageLightsNeededText" Text="0" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
+                                            </Grid>
+                                        </Border>
+                                        
+                                        <!-- Total Cost -->
+                                        <Border Background="{StaticResource PanelSurface}" CornerRadius="10" Padding="12" Margin="0,0,0,8"
+                                              UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.3" Color="#000000"/>
+                                            </Border.Effect>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Path Grid.Column="0" Data="{StaticResource CalculatorIcon}" 
+                                                      Style="{StaticResource VectorIcon}" 
+                                                      Width="16" Height="16"
+                                                      Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="Total Cost" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
+                                                <TextBlock Grid.Column="2" x:Name="TotalCostText" Text="£0" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
+                                            </Grid>
+                                        </Border>
+                                        
+                                        <!-- Cost Per Locker -->
+                                        <Border Background="{StaticResource PanelSurface}" CornerRadius="10" Padding="12"
+                                              UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.3" Color="#000000"/>
+                                            </Border.Effect>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Path Grid.Column="0" Data="{StaticResource CalculatorIcon}" 
+                                                      Style="{StaticResource VectorIcon}" 
+                                                      Width="16" Height="16"
+                                                      Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="Cost/Locker" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
+                                                <TextBlock Grid.Column="2" x:Name="CostPerLockerText" Text="£0" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- Leftovers Card -->
+                            <Border Grid.Row="1" Style="{StaticResource ModernCard}" Margin="0,0,0,0">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                        <Border Width="35" Height="35" CornerRadius="18" Margin="0,0,10,0"
+                                               UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                    <GradientStop Color="#FFFF6B35" Offset="0"/>
+                                                    <GradientStop Color="#FFFF8C42" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.6" Color="#FFFF6B35"/>
+                                            </Border.Effect>
+                                            <Path Data="{StaticResource BoxIcon}" 
+                                                  Style="{StaticResource VectorIcon}" 
+                                                  Width="18" Height="18"
+                                                  HorizontalAlignment="Center" 
+                                                  VerticalAlignment="Center"/>
+                                        </Border>
+                                        <TextBlock Text="Leftover Materials" 
+                                                  FontSize="16" 
+                                                  FontWeight="Light" 
+                                                  Foreground="{StaticResource TextPrimary}"
+                                                  VerticalAlignment="Center"
+                                                  TextOptions.TextFormattingMode="Display"
+                                                  TextOptions.TextRenderingMode="ClearType"/>
+                                    </StackPanel>
+                                    
+                                    <StackPanel>
+                                        <!-- Scrap Leftover -->
+                                        <Border Background="{StaticResource PanelSurface}" CornerRadius="10" Padding="12" Margin="0,0,0,8"
+                                              UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.3" Color="#000000"/>
+                                            </Border.Effect>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Path Grid.Column="0" Data="{StaticResource WrenchIcon}" 
+                                                      Style="{StaticResource VectorIcon}" 
+                                                      Width="16" Height="16"
+                                                      Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="Scrap Leftover" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
+                                                <TextBlock Grid.Column="2" x:Name="ScrapLeftoverText" Text="0" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
+                                            </Grid>
+                                        </Border>
+                                        
+                                        <!-- Wire Leftover -->
+                                        <Border Background="{StaticResource PanelSurface}" CornerRadius="10" Padding="12" Margin="0,0,0,8"
+                                              UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.3" Color="#000000"/>
+                                            </Border.Effect>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Path Grid.Column="0" Data="{StaticResource WrenchIcon}" 
+                                                      Style="{StaticResource VectorIcon}" 
+                                                      Width="16" Height="16"
+                                                      Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="Wire Leftover" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
+                                                <TextBlock Grid.Column="2" x:Name="WireLeftoverText" Text="0" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
+                                            </Grid>
+                                        </Border>
+                                        
+                                        <!-- Metal Bars Produced -->
+                                        <Border Background="{StaticResource PanelSurface}" CornerRadius="10" Padding="12"
+                                              UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.3" Color="#000000"/>
+                                            </Border.Effect>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Path Grid.Column="0" Data="{StaticResource BoxIcon}" 
+                                                      Style="{StaticResource VectorIcon}" 
+                                                      Width="16" Height="16"
+                                                      Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="Metal Bars Produced" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
+                                                <TextBlock Grid.Column="2" x:Name="MetalBarsProducedText" Text="0" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </WrapPanel>
+                    </Grid>
+                    </ScrollViewer>
+                </TabItem>
+                
+                <!-- Cigar Calculator Tab -->
+                <TabItem Header="🚬 Cigars" 
+                         Style="{StaticResource CustomTabItem}"
+                         UseLayoutRounding="True" SnapsToDevicePixels="True">
+                    <TabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🚬" FontSize="14" Margin="0,0,6,0"/>
+                                <TextBlock Text="Cigars" FontSize="12"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </TabItem.HeaderTemplate>
+                    
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
+                              UseLayoutRounding="True" SnapsToDevicePixels="True">
+                        <Grid UseLayoutRounding="True" SnapsToDevicePixels="True" Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                        
+                        <ContentControl Grid.Row="0" ContentTemplate="{StaticResource NavCigarsTemplate}"/>
+
+                        <!-- Cigar Input Section -->
+                        <Border Grid.Row="1" Style="{StaticResource ModernCard}" Margin="0,0,0,20">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,15,0">
+                                    <Border Width="40" Height="40" CornerRadius="20" Margin="0,0,0,8"
+                                           UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#FFB87333" Offset="0"/>
+                                                <GradientStop Color="#FF8B5A2B" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <TextBlock Text="🚬" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                                    </Border>
+                                    <TextBlock Text="Number of Cigars:" Style="{StaticResource LabelTextStyle}" FontSize="12"/>
+                                </StackPanel>
+                                
+                                <Grid Grid.Column="1" Margin="0,0,15,0"
+                                     UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                    <TextBox x:Name="CigarCountTextBox" 
+                                             Text="300" 
+                                             FontSize="14" 
+                                             Height="35"
+                                             Background="{StaticResource PanelSurface}"
+                                             Foreground="White"
+                                             BorderBrush="{StaticResource PanelSurfaceAlt}"
+                                             BorderThickness="2"
+                                             Padding="15,8"
+                                             FontFamily="Segoe UI"
+                                             TextOptions.TextFormattingMode="Display"
+                                             TextOptions.TextRenderingMode="ClearType"
+                                             UseLayoutRounding="True"
+                                             SnapsToDevicePixels="True"
+                                             VerticalAlignment="Center"/>
+                                </Grid>
+                                
+                                <Button Grid.Column="2" x:Name="CalculateCigarButton" Content="Calculate" 
+                                       Style="{StaticResource GlassButton}" Click="CalculateCigarButton_Click" Height="35" Padding="12,0">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Path Data="{StaticResource CalculatorIcon}" 
+                                                      Style="{StaticResource VectorIcon}" 
+                                                      Width="14" Height="14"
+                                                      Margin="0,0,6,0"
+                                                      VerticalAlignment="Center"/>
+                                                <TextBlock Text="Calculate" VerticalAlignment="Center"
+                                                          TextOptions.TextFormattingMode="Display"
+                                                          TextOptions.TextRenderingMode="ClearType"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
+                            </Grid>
+                        </Border>
+
+                        <!-- Responsive Layout Container -->
+                        <WrapPanel Grid.Row="2" Orientation="Horizontal" ItemHeight="Auto" Margin="0,0,0,0" VerticalAlignment="Top">
+                            
+                            <!-- Revenue Card -->
+                            <Border Style="{StaticResource CardTile}">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                        <Border Width="35" Height="35" CornerRadius="18" Margin="0,0,10,0"
+                                               UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                    <GradientStop Color="#FF4CAF50" Offset="0"/>
+                                                    <GradientStop Color="#FF45A049" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.6" Color="#FF4CAF50"/>
+                                            </Border.Effect>
+                                            <Path Data="M7,18H17V16H7V18M12,6L7,13H17L12,6M17,21H7V19H17V21Z" 
+                                                  Style="{StaticResource VectorIcon}" 
+                                                  Width="18" Height="18"
+                                                  HorizontalAlignment="Center" 
+                                                  VerticalAlignment="Center"
+                                                  Fill="White"/>
+                                        </Border>
+                                        <TextBlock Text="Revenue and Production" 
+                                                  FontSize="16" 
+                                                  FontWeight="Light" 
+                                                  Foreground="{StaticResource TextPrimary}"
+                                                  VerticalAlignment="Center"
+                                                  TextOptions.TextFormattingMode="Display"
+                                                  TextOptions.TextRenderingMode="ClearType"/>
+                                    </StackPanel>
+                                    
+                                    <StackPanel>
+                                        <!-- Total Revenue -->
+                                        <Border Background="{StaticResource PanelSurface}" CornerRadius="10" Padding="12" Margin="0,0,0,8"
+                                              UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.3" Color="#000000"/>
+                                            </Border.Effect>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Path Grid.Column="0" Data="M7,18H17V16H7V18M12,6L7,13H17L12,6M17,21H7V19H17V21Z" 
+                                                      Style="{StaticResource VectorIcon}" 
+                                                      Width="16" Height="16"
+                                                      Margin="0,0,10,0" VerticalAlignment="Center"
+                                                      Fill="#FF4CAF50"/>
+                                                <TextBlock Grid.Column="1" Text="Total Revenue" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
+                                                <TextBlock Grid.Column="2" x:Name="CigarRevenueText" Text="£30,000" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
+                                            </Grid>
+                                        </Border>
+                                        
+                                        <!-- Production Time -->
+                                        <Border Background="{StaticResource PanelSurface}" CornerRadius="10" Padding="12" Margin="0,0,0,8"
+                                              UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.3" Color="#000000"/>
+                                            </Border.Effect>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Path Grid.Column="0" Data="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M16.2,16.2L11,13V7H12.5V12.2L17,14.7L16.2,16.2Z" 
+                                                      Style="{StaticResource VectorIcon}" 
+                                                      Width="16" Height="16"
+                                                      Margin="0,0,10,0" VerticalAlignment="Center"
+                                                      Fill="#FF4CAF50"/>
+                                                <TextBlock Grid.Column="1" Text="Production Time" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
+                                                <TextBlock Grid.Column="2" x:Name="CigarProductionTimeText" Text="1.00h" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
+                                            </Grid>
+                                        </Border>
+                                        
+                                        <!-- Revenue Per Hour -->
+                                        <Border Background="{StaticResource PanelSurface}" CornerRadius="10" Padding="12"
+                                              UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.3" Color="#000000"/>
+                                            </Border.Effect>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Path Grid.Column="0" Data="M7,18H17V16H7V18M12,6L7,13H17L12,6M17,21H7V19H17V21Z" 
+                                                      Style="{StaticResource VectorIcon}" 
+                                                      Width="16" Height="16"
+                                                      Margin="0,0,10,0" VerticalAlignment="Center"
+                                                      Fill="#FF4CAF50"/>
+                                                <TextBlock Grid.Column="1" Text="Revenue/Hour" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
+                                                <TextBlock Grid.Column="2" Text="£30,000" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
+                                            </Grid>
+                                        </Border>
+                                        
+                                        <!-- Disclaimer -->
+                                        <Border Background="{StaticResource PanelSurface}" CornerRadius="8" Padding="12" Margin="0,15,0,0">
+                                            <TextBlock Text="⚠️ These calculations are based on average player performance. Individual results may vary - some players may produce more or less per hour." 
+                                                      FontSize="10" 
+                                                      Foreground="#FFB0B0B0"
+                                                      TextWrapping="Wrap"
+                                                      LineHeight="14"/>
+                                        </Border>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- Materials Card -->
+                            <Border Style="{StaticResource CardTile}">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                        <Border Width="35" Height="35" CornerRadius="18" Margin="0,0,10,0"
+                                               UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                    <GradientStop Color="#FFB87333" Offset="0"/>
+                                                    <GradientStop Color="#FF8B5A2B" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.6" Color="#FFB87333"/>
+                                            </Border.Effect>
+                                            <TextBlock Text="🚬" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                                        </Border>
+                                        <TextBlock Text="Materials Required" 
+                                                  FontSize="16" 
+                                                  FontWeight="Light" 
+                                                  Foreground="{StaticResource TextPrimary}"
+                                                  VerticalAlignment="Center"
+                                                  TextOptions.TextFormattingMode="Display"
+                                                  TextOptions.TextRenderingMode="ClearType"/>
+                                    </StackPanel>
+                                    
+                                    <StackPanel>
+                                        <!-- Plants Needed -->
+                                        <Border Background="{StaticResource PanelSurface}" CornerRadius="10" Padding="12" Margin="0,0,0,8"
+                                              UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.3" Color="#000000"/>
+                                            </Border.Effect>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="🌱" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="Plants Needed" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
+                                                <TextBlock Grid.Column="2" x:Name="CigarPlantsText" Text="100" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
+                                            </Grid>
+                                        </Border>
+                                        
+                                        <!-- Tape Needed -->
+                                        <Border Background="{StaticResource PanelSurface}" CornerRadius="10" Padding="12"
+                                              UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.3" Color="#000000"/>
+                                            </Border.Effect>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="📼" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="Tape Needed" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
+                                                <TextBlock Grid.Column="2" x:Name="CigarTapeText" Text="200" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </WrapPanel>
+                    </Grid>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+
+            <!-- Footer -->
+            <Grid Grid.Row="2" 
+                  Margin="0,10,0,0"
+                  UseLayoutRounding="True" SnapsToDevicePixels="True">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Social Media Buttons - Left Side -->
+                <StackPanel Grid.Column="0" 
+                           Orientation="Horizontal"
+                           VerticalAlignment="Center"
+                           UseLayoutRounding="True" SnapsToDevicePixels="True">
+                    <Button x:Name="DiscordButton" 
+                           Style="{StaticResource SocialButton}" 
+                           Margin="0,0,6,0"
+                           Click="DiscordButton_Click">
+                        <Path Data="{StaticResource DiscordIcon}" 
+                              Style="{StaticResource VectorIcon}" 
+                              Width="16" Height="16"
+                              Fill="#5865F2"/>
+                    </Button>
+                    
+                    <Button x:Name="YoutubeButton" 
+                           Style="{StaticResource SocialButton}"
+                           Click="YoutubeButton_Click">
+                        <Path Data="{StaticResource YoutubeIcon}" 
+                              Style="{StaticResource VectorIcon}" 
+                              Width="16" Height="16"
+                              Fill="#FF0000"/>
+                    </Button>
+                    
+                    <Button x:Name="TermsButton" 
+                           Style="{StaticResource SocialButton}"
+                           Margin="6,0,0,0"
+                           Click="TermsButton_Click"
+                           ToolTip="Terms of Service">
+                        <Path Data="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" 
+                              Style="{StaticResource VectorIcon}" 
+                              Width="16" Height="16"
+                              Fill="#FFB0B0B0"/>
+                    </Button>
+                </StackPanel>
+                
+                <!-- Status Text - Center -->
+                <TextBlock Grid.Column="1" 
+                          Text="Ready to calculate" 
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          FontSize="10"
+                          Foreground="#FF808080"
+                          TextOptions.TextFormattingMode="Display"
+                          TextOptions.TextRenderingMode="ClearType"/>
+                
+                <!-- Version Info - Right Side -->
+                <TextBlock Grid.Column="2" 
+                          Text="v1.3.6a" 
+                          HorizontalAlignment="Right"
+                          VerticalAlignment="Center"
+                          FontSize="10"
+                          Foreground="#FF808080"
+                          TextOptions.TextFormattingMode="Display"
+                          TextOptions.TextRenderingMode="ClearType"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

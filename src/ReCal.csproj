@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>ReCal</AssemblyName>
+    <ApplicationIcon>..\assets\ReCal.ico</ApplicationIcon>
+    <RootNamespace>ReCal</RootNamespace>
+    <AssemblyTitle>ReCal</AssemblyTitle>
+    <AssemblyDescription>ReCal - A calculator for determining material costs and requirements for crafting Wall Lockers in Unturned</AssemblyDescription>
+    <AssemblyCompany>Created by Asuneteric</AssemblyCompany>
+    <AssemblyProduct>ReCal</AssemblyProduct>
+    <AssemblyCopyright>Copyright (c) 2026 Created by Asuneteric</AssemblyCopyright>
+    <AssemblyVersion>1.4.1.0</AssemblyVersion>
+    <FileVersion>1.4.1.0</FileVersion>
+    <AssemblyInformationalVersion>1.4.1.0a</AssemblyInformationalVersion>
+    <StartupObject>ReCal.App</StartupObject>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Deterministic>false</Deterministic>
+    <NuGetAuditMode>all</NuGetAuditMode>
+    <NuGetAuditLevel>low</NuGetAuditLevel>
+    <IncludeSymbols>False</IncludeSymbols>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageReleaseNotes>Major Overhaul</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="..\assets\Logo.png" />
+    <Resource Include="..\assets\ReCal.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <Target Name="GenerateIntegrityManifest" AfterTargets="Build" Condition="'$(Configuration)'=='Release' and '$(GenerateIntegrityManifest)'=='true'">
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(ProjectDir)..\tools\release\GenerateIntegrityManifest.ps1&quot; -OutputDir &quot;$(TargetDir)&quot;" />
+  </Target>
+
+</Project>
