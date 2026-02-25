@@ -23,7 +23,7 @@ namespace ReCal.Models
     {
         private static readonly string GITHUB_REPO = "ScriptB/ReCal";
         private static readonly string GITHUB_API_URL = "https://api.github.com/repos/" + GITHUB_REPO + "/releases/latest";
-        private static readonly string CURRENT_VERSION = "1.4.1.0";
+        private static readonly string CURRENT_VERSION = "1.4.1b";
 
         public static async Task CheckForUpdatesAsync()
         {
@@ -65,9 +65,9 @@ namespace ReCal.Models
         {
             try
             {
-                // Remove 'v' prefix if present and compare versions
-                var cleanLatest = latestVersion.StartsWith("v") ? latestVersion.Substring(1) : latestVersion;
-                var current = new Version(CURRENT_VERSION);
+                // Remove common tag prefixes and compare versions
+                var cleanLatest = TrimTagPrefix(latestVersion);
+                var current = new Version(TrimTagPrefix(CURRENT_VERSION));
                 var latest = new Version(cleanLatest);
                 
                 return latest > current;
@@ -76,6 +76,28 @@ namespace ReCal.Models
             {
                 return false;
             }
+        }
+
+        private static string TrimTagPrefix(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return string.Empty;
+            }
+
+            var trimmed = value.Trim();
+            if (trimmed.StartsWith("v", StringComparison.OrdinalIgnoreCase))
+            {
+                trimmed = trimmed.Substring(1);
+            }
+
+            if (trimmed.StartsWith("ReCal-", StringComparison.OrdinalIgnoreCase) ||
+                trimmed.StartsWith("Recal-", StringComparison.OrdinalIgnoreCase))
+            {
+                trimmed = trimmed.Substring(6);
+            }
+
+            return trimmed;
         }
 
         private static void ShowUpdateDialog(GitHubRelease release)

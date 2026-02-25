@@ -3,6 +3,8 @@ name: Build and Release
 on:
   push:
     tags:
+      - 'ReCal-*'
+      - 'Recal-*'
       - 'v*'
   workflow_dispatch:
 
@@ -22,26 +24,24 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore src/ReCal.csproj
 
-    - name: Build
-      run: dotnet build src/ReCal.csproj --configuration Release --no-restore
+    - name: Publish (self-contained)
+      run: dotnet publish src/ReCal.csproj -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishReadyToRun=true
 
-    - name: Prepare ZIP
+    - name: Prepare EXE
       shell: pwsh
       run: |
-        $out = "src/bin/Release/net48"
-        if (-not (Test-Path $out)) { throw "Build output not found: $out" }
+        $out = "src/bin/Release/net8.0-windows/win-x64/publish"
+        $exe = Join-Path $out "ReCal.exe"
+        if (-not (Test-Path $exe)) { throw "Publish output not found: $exe" }
         New-Item -ItemType Directory -Force -Path artifacts | Out-Null
-        Get-ChildItem -Path $out -File | Where-Object { $_.Extension -ne '.pdb' } | ForEach-Object {
-          Copy-Item $_.FullName -Destination artifacts -Force
-        }
-        Compress-Archive -Path artifacts/* -DestinationPath artifacts/ReCal.zip -Force
+        Copy-Item $exe -Destination "artifacts/ReCal.exe" -Force
 
     - name: Get version
       id: get_version
       shell: pwsh
       run: |
         if ($env:GITHUB_REF -like 'refs/tags/*') {
-          $version = $env:GITHUB_REF -replace 'refs/tags/v', ''
+          $version = $env:GITHUB_REF -replace 'refs/tags/', ''
         } else {
           $version = "latest"
         }
@@ -54,19 +54,14 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ github.ref }}
-        release_name: ReCal v${{ steps.get_version.outputs.version }}
+        release_name: ReCal ${{ steps.get_version.outputs.version }}
         body: |
           ## Download
-          Download the ZIP below, extract it, and run `ReCal.exe`.
+          Download the standalone EXE below and run it directly.
 
-          ## Changes in this release
-          - Update checker points to ScriptB/ReCal
-          - WPF UI with frosted glass styling
-          - Wall Locker material and cost calculations
-          - Terms of Service and update progress dialog
-
-          ## Update System
-          The application checks GitHub Releases on startup.
+          ## Notes
+          - Self-contained single-file Windows build
+          - No external .NET runtime required
         draft: false
         prerelease: false
 
@@ -76,6 +71,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: artifacts/ReCal.zip
-        asset_name: ReCal-${{ steps.get_version.outputs.version }}.zip
-        asset_content_type: application/zip
+        asset_path: artifacts/ReCal.exe
+        asset_name: ReCal-${{ steps.get_version.outputs.version }}.exe
+        asset_content_type: application/octet-stream
