@@ -56,16 +56,14 @@ jobs:
         tag_name: ${{ github.ref }}
         release_name: ReCal v${{ steps.get_version.outputs.version }}
         body: |
+          ## Download
+          Download the ZIP below, extract it, and run `ReCal.exe`.
+
           ## Changes in this release
           - Update checker points to ScriptB/ReCal
           - WPF UI with frosted glass styling
           - Wall Locker material and cost calculations
           - Terms of Service and update progress dialog
-
-          ## Installation
-          1. Download the ZIP file below
-          2. Extract to your desired location
-          3. Run ReCal.exe
 
           ## Update System
           The application checks GitHub Releases on startup.

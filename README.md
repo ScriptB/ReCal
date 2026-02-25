@@ -2,10 +2,13 @@
 
 ReCal is a WPF desktop application for calculating the cost and material requirements for crafting Wall Lockers in Unturned. It includes automatic update support via GitHub Releases.
 
-## Download
+## Download (Easy)
 
-Get the latest release from:
-https://github.com/ScriptB/ReCal/releases
+1. Go to the GitHub Releases page for this repo.
+2. Download the latest `ReCal-<version>.zip` asset.
+3. Extract the ZIP and run `ReCal.exe`.
+
+Tip: The EXE is inside the ZIP so users always get the required DLLs.
 
 ## Build (Developer)
 
@@ -29,4 +32,4 @@ See `docs/RELEASE.md` for the public release workflow.
 
 ## License
 
-MIT. See `LICENSE`.
+Proprietary. See `LICENSE`.
