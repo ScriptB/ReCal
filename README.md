@@ -4,7 +4,7 @@ ReCal is a WPF desktop application for calculating the cost and material require
 
 ## Download (Easy)
 
-1. Go to the GitHub Releases page for this repo.
+1. Go to the [GitHub Releases page](https://github.com/ScriptB/ReCal/releases).
 2. Download the latest `ReCal-<version>.zip` asset.
 3. Extract the ZIP and run `ReCal.exe`.
 
@@ -12,7 +12,7 @@ Tip: The EXE is inside the ZIP so users always get the required DLLs.
 
 ## Installation (Quick Guide)
 
-1. Open the Releases page: https://github.com/ScriptB/ReCal/releases
+1. Open the [Releases page](https://github.com/ScriptB/ReCal/releases).
 2. Under the latest release, download `ReCal-<version>.zip`.
 3. Right-click the ZIP and choose **Extract All**.
 4. Open the extracted folder and double-click `ReCal.exe`.
