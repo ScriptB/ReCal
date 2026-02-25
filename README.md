@@ -17,7 +17,6 @@ Tip: The EXE is inside the ZIP so users always get the required DLLs.
 - `src/` WPF application source (net48)
 - `assets/` icons and images used by the app
 - `docs/` additional documentation
-- `tools/` build and release scripts
 - `ReCal.sln` solution file
 
 ## Release Process

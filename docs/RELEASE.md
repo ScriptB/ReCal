@@ -21,25 +21,19 @@ Option B: CLI
 Output path:
 - `src/bin/Release/net48/`
 
-## 3. (Optional) Integrity Manifest
-
-Generate an integrity manifest alongside the EXE:
-- Build with `GenerateIntegrityManifest=true`, or
-- Run `tools/release/GenerateIntegrityManifest.ps1 -OutputDir <output path>`
-
-## 4. Create Release ZIP
+## 3. Create Release ZIP
 
 1. Create an `artifacts/` folder in the repo root (it is ignored by git).
 2. Zip the contents of `src/bin/Release/net48/` into `artifacts/ReCal-X.Y.Z.zip`.
 3. Exclude `*.pdb` files from the ZIP.
 
-## 5. Tag and Publish
+## 4. Tag and Publish
 
 1. Tag the release: `git tag vX.Y.Z`
 2. Push tag: `git push origin vX.Y.Z`
 3. Create a GitHub Release for the tag and upload `ReCal-X.Y.Z.zip`.
 
-## 6. Verify
+## 5. Verify
 
 - Download the release ZIP from GitHub.
 - Run `ReCal.exe` and confirm the update checker resolves the latest tag.
