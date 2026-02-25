@@ -1340,13 +1340,13 @@
                 </TabItem>
 
 <!-- Wall Locker Tab -->
-                <TabItem Header="🔒 Wall Lockers" 
+                <TabItem Header="???? Wall Lockers" 
                          Style="{StaticResource CustomTabItem}"
                          UseLayoutRounding="True" SnapsToDevicePixels="True">
                     <TabItem.HeaderTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="🔒" FontSize="14" Margin="0,0,6,0"/>
+                                <TextBlock Text="????" FontSize="14" Margin="0,0,6,0"/>
                                 <TextBlock Text="Wall Lockers" FontSize="12"/>
                             </StackPanel>
                         </DataTemplate>
@@ -1522,7 +1522,7 @@
                                                       Width="16" Height="16"
                                                       Margin="0,0,10,0" VerticalAlignment="Center"/>
                                                 <TextBlock Grid.Column="1" Text="Total Cost" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
-                                                <TextBlock Grid.Column="2" x:Name="TotalCostText" Text="£0" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
+                                                <TextBlock Grid.Column="2" x:Name="TotalCostText" Text="??0" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
                                             </Grid>
                                         </Border>
                                         
@@ -1543,7 +1543,7 @@
                                                       Width="16" Height="16"
                                                       Margin="0,0,10,0" VerticalAlignment="Center"/>
                                                 <TextBlock Grid.Column="1" Text="Cost/Locker" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
-                                                <TextBlock Grid.Column="2" x:Name="CostPerLockerText" Text="£0" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
+                                                <TextBlock Grid.Column="2" x:Name="CostPerLockerText" Text="??0" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
                                             </Grid>
                                         </Border>
                                     </StackPanel>
@@ -1652,13 +1652,13 @@
                 </TabItem>
                 
                 <!-- Cigar Calculator Tab -->
-                <TabItem Header="🚬 Cigars" 
+                <TabItem Header="???? Cigars" 
                          Style="{StaticResource CustomTabItem}"
                          UseLayoutRounding="True" SnapsToDevicePixels="True">
                     <TabItem.HeaderTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="🚬" FontSize="14" Margin="0,0,6,0"/>
+                                <TextBlock Text="????" FontSize="14" Margin="0,0,6,0"/>
                                 <TextBlock Text="Cigars" FontSize="12"/>
                             </StackPanel>
                         </DataTemplate>
@@ -1693,7 +1693,7 @@
                                                 <GradientStop Color="#FF8B5A2B" Offset="1"/>
                                             </LinearGradientBrush>
                                         </Border.Background>
-                                        <TextBlock Text="🚬" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                                        <TextBlock Text="????" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
                                     </Border>
                                     <TextBlock Text="Number of Cigars:" Style="{StaticResource LabelTextStyle}" FontSize="12"/>
                                 </StackPanel>
@@ -1790,7 +1790,7 @@
                                                       Margin="0,0,10,0" VerticalAlignment="Center"
                                                       Fill="#FF4CAF50"/>
                                                 <TextBlock Grid.Column="1" Text="Total Revenue" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
-                                                <TextBlock Grid.Column="2" x:Name="CigarRevenueText" Text="£30,000" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
+                                                <TextBlock Grid.Column="2" x:Name="CigarRevenueText" Text="??30,000" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
                                             </Grid>
                                         </Border>
                                         
@@ -1834,13 +1834,13 @@
                                                       Margin="0,0,10,0" VerticalAlignment="Center"
                                                       Fill="#FF4CAF50"/>
                                                 <TextBlock Grid.Column="1" Text="Revenue/Hour" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
-                                                <TextBlock Grid.Column="2" Text="£30,000" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
+                                                <TextBlock Grid.Column="2" Text="??30,000" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
                                             </Grid>
                                         </Border>
                                         
                                         <!-- Disclaimer -->
                                         <Border Background="{StaticResource PanelSurface}" CornerRadius="8" Padding="12" Margin="0,15,0,0">
-                                            <TextBlock Text="⚠️ These calculations are based on average player performance. Individual results may vary - some players may produce more or less per hour." 
+                                            <TextBlock Text="?????? These calculations are based on average player performance. Individual results may vary - some players may produce more or less per hour." 
                                                       FontSize="10" 
                                                       Foreground="#FFB0B0B0"
                                                       TextWrapping="Wrap"
@@ -1865,7 +1865,7 @@
                                             <Border.Effect>
                                                 <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.6" Color="#FFB87333"/>
                                             </Border.Effect>
-                                            <TextBlock Text="🚬" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                                            <TextBlock Text="????" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
                                         </Border>
                                         <TextBlock Text="Materials Required" 
                                                   FontSize="16" 
@@ -1889,7 +1889,7 @@
                                                     <ColumnDefinition Width="*"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="🌱" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="0" Text="????" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                                 <TextBlock Grid.Column="1" Text="Plants Needed" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
                                                 <TextBlock Grid.Column="2" x:Name="CigarPlantsText" Text="100" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
                                             </Grid>
@@ -1907,7 +1907,7 @@
                                                     <ColumnDefinition Width="*"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="📼" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="0" Text="????" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                                 <TextBlock Grid.Column="1" Text="Tape Needed" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center" FontSize="12"/>
                                                 <TextBlock Grid.Column="2" x:Name="CigarTapeText" Text="200" Style="{StaticResource ValueTextStyle}" FontSize="14"/>
                                             </Grid>
@@ -1979,7 +1979,7 @@
                 
                 <!-- Version Info - Right Side -->
                 <TextBlock Grid.Column="2" 
-                          Text="v1.3.6a" 
+                          Text="v1.4.1.0" 
                           HorizontalAlignment="Right"
                           VerticalAlignment="Center"
                           FontSize="10"

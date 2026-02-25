@@ -14,7 +14,7 @@
     <AssemblyCopyright>Copyright (c) 2026 Created by Asuneteric</AssemblyCopyright>
     <AssemblyVersion>1.4.1.0</AssemblyVersion>
     <FileVersion>1.4.1.0</FileVersion>
-    <AssemblyInformationalVersion>1.4.1.0a</AssemblyInformationalVersion>
+    <AssemblyInformationalVersion>1.4.1.0</AssemblyInformationalVersion>
     <StartupObject>ReCal.App</StartupObject>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
